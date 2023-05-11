@@ -3,17 +3,23 @@ import "./Login.css";
 import { useState } from "react";
 import useGenerateId from "../hooks/useGenerateId";
 import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "../hooks/useAppDispatch";
+import { setOrderId, setOrderName } from "../app/appSlice";
 
 export function Login() {
   const [name, setName] = useState("");
   const [error, setError] = useState(false);
-  const id  = useGenerateId();
+  const id = useGenerateId();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const createSalad = () => {
     if (!name) {
       setError(true);
     } else {
+      dispatch(setOrderName(name));
+      dispatch(setOrderId(id));
+
       navigate(`/salad/${id}`);
     }
   };
