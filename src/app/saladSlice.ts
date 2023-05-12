@@ -1,9 +1,4 @@
-import {
-  PayloadAction,
-  ThunkAction,
-  createAsyncThunk,
-  createSlice,
-} from "@reduxjs/toolkit";
+import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { Topping } from "../models/topping.model";
 import { fetchToppings } from "../services/saladService";
 import { AppThunk, RootState } from "./store";
@@ -57,6 +52,7 @@ export const saladSlice = createSlice({
   },
 });
 
+// Manual thunk
 export const loadToppingsV2 =
   (): AppThunk<void> => async (dispatch, getState) => {
     const toppings = await fetchToppings();
@@ -65,6 +61,13 @@ export const loadToppingsV2 =
     // }
     dispatch(setToppings(toppings));
   };
+
+export const selectTotalPrice = (state: RootState) => {
+  const toppingsPrice = state.salad.chosenToppings.reduce((sum, topping) => {
+    return (sum += topping.price);
+  }, 0);
+  return Math.round((toppingsPrice + 3.99) * 100) / 100;
+};
 
 export const { setToppings, chooseTopping } = saladSlice.actions;
 export const saladReducer = saladSlice.reducer;
